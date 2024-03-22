@@ -1,0 +1,115 @@
+<html>
+
+<head>
+</head>
+<style>
+    * {
+        font-family: Arial, sans-serif;
+    }
+    
+    form {
+        margin: 15px 5px;
+        width: 500px;
+        font-size: 16px;
+    }
+    
+    form h1 {
+        text-align: center;
+    }
+    
+    form label {
+        display: block;
+        margin-bottom: 5px;
+    }
+    
+    form input,
+    form textarea {
+        width: 100%;
+        padding: 5px;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+        resize: vertical;
+    }
+    
+    form button {
+        background: #4CAF50;
+        color: white;
+        padding: 10px 15px;
+        margin-top: 5px;
+        border: none;
+        cursor: pointer;
+    }
+    
+    form button:hover {
+        background: green;
+    }
+</style>
+
+<body onload="getTheOver()">
+    <form>
+        <h1>מחשב הוצאות משפחת סרוסי</h1>
+        <h2 id="schum"> הסכום שנשאר: </h2>
+        <label for="">מספר טלפון</label>
+        <select class="phonenumber">
+         <option>
+            מאור
+         </option> 
+         <option>
+            ירדן
+         </option>             
+        </select>
+
+        <label for="">חנות שנקנה בה</label>
+        <input type="text" class="shop">
+
+        <label for="">סכום הוצאה</label>
+        <input type="number" class="sum">
+
+        <label for=" ">סה"כ</label>
+        <p id="total" class="total"></p>
+        <button type="button" onclick="sendwhatsapp();">שלח הודעה דרך whatsapp</button>
+    </form>
+    <script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>
+    <script>
+        var FIREBASE = 'https://hozaot-4c2b5-default-rtdb.firebaseio.com/';
+        var TOTAL = 0;
+
+        function sendwhatsapp() {
+            var phoneNmbernName = document.querySelector(".phonenumber").value;
+            var shop = document.querySelector(".shop").value;
+            var sumBuy = document.querySelector(".sum").value;
+            if (shop == "" || sumBuy == "") {
+                alert("חייב להכניס ערכים");
+            } else {
+                var phonenumber = phoneNmbernName == "ירדן" ? "+972504955445" : "+972528109063";
+                var total = TOTAL - sumBuy;
+                var message = phonenumber + "?text=" +
+                    "*חנות: * " + shop + "%0a" +
+                    "*סכום: * " + sumBuy + "%0a" +
+                    "*סך הכל: * " + total +
+                    "%0a%0a";
+                var messageForP = "חנות:" + shop + "<br>" +
+                    "סכום:  " + sumBuy + "<br>" +
+                    "סך הכל:  " + total
+                var url = "https://wa.me/" + message;
+                document.getElementById("total").innerHTML = messageForP;
+                var ref = new Firebase(FIREBASE);
+                refSum = ref.child("sum");
+                refSum.set(total);
+                document.getElementById("schum").innerHTML = "הסכום שנשאר: " + total;
+                window.open(url, '_blank').focus();
+            }
+        }
+
+        function getTheOver() {
+            var ref = new Firebase(FIREBASE);
+            ref.on("value", function(snapshot) {
+                var data = snapshot.val();
+                document.getElementById("schum").innerHTML += data["sum"];
+                TOTAL = data["sum"];
+            });
+        }
+    </script>
+</body>
+
+</html>
