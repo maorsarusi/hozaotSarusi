@@ -68,11 +68,13 @@
         <label for=" ">סה"כ</label>
         <p id="total" class="total"></p>
         <button type="button" onclick="sendwhatsapp();">שלח הודעה דרך whatsapp</button>
+        <button type="button" onclick="startNewMonth();">התחל חודש מחדש</button>
     </form>
     <script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>
     <script>
         var FIREBASE = 'https://hozaot-4c2b5-default-rtdb.firebaseio.com/';
         var TOTAL = 0;
+        var NEWMONTH = 2000;
 
         function sendwhatsapp() {
             var phoneNmbernName = document.querySelector(".phonenumber").value;
@@ -84,18 +86,15 @@
                 var phonenumber = phoneNmbernName == "ירדן" ? "+972504955445" : "+972528109063";
                 var total = TOTAL - sumBuy;
                 var message = phonenumber + "?text=" +
-                    "*חנות:* " + shop + "%0a" +
-                    "*סכום:* " + sumBuy + "%0a" +
-                    "*סך הכל:* " + total +
-                    "%0a%0a";
+                    "*חנות:*" + shop + "%0a" +
+                    "*סכום:*" + sumBuy + "%0a" +
+                    "*סך הכל:* " + total;
                 var messageForP = "חנות:" + shop + "<br>" +
                     "סכום:  " + sumBuy + "<br>" +
                     "סך הכל:  " + total
                 var url = "https://wa.me/" + message;
                 document.getElementById("total").innerHTML = messageForP;
-                var ref = new Firebase(FIREBASE);
-                refSum = ref.child("sum");
-                refSum.set(total);
+                writeToFirebase(total);
                 document.getElementById("schum").innerHTML = "הסכום שנשאר: " + total;
                 window.open(url, '_blank').focus();
             }
@@ -108,6 +107,24 @@
                 document.getElementById("schum").innerHTML += data["sum"];
                 TOTAL = data["sum"];
             });
+        }
+
+        function startNewMonth() {
+            let result = confirm(`לחצו OK לאפס את הסכום ל ${NEWMONTH} ש"ח`);
+            if (result === true) {
+                writeToFirebase(NEWMONTH);
+                alert(`הסכום החודשי התאפס ועכשיו הוא ${NEWMONTH} ש"ח`);
+                document.getElementById("schum").innerHTML = "הסכום שנשאר: " + NEWMONTH;
+
+            } else {
+                alert(`הסכום נשאר ${TOTAL} ש"ח`);
+            }
+        }
+
+        function writeToFirebase(num) {
+            var ref = new Firebase(FIREBASE);
+            refSum = ref.child("sum");
+            refSum.set(num);
         }
     </script>
 </body>
