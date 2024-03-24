@@ -63,7 +63,7 @@
         <input type="text" class="shop">
 
         <label for="">סכום הוצאה</label>
-        <input type="number" class="sum">
+        <input type="number" step="0.01" class=" sum ">
 
         <label for=" ">סה"כ</label>
         <p id="total" class="total"></p>
@@ -73,8 +73,8 @@
     <script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>
     <script>
         var FIREBASE = 'https://hozaot-4c2b5-default-rtdb.firebaseio.com/';
-        var TOTAL = 0;
-        var NEWMONTH = 2000;
+        var TOTAL = 0.00;
+        var NEWMONTH = 2000.00;
 
         function sendwhatsapp() {
             var phoneNmbernName = document.querySelector(".phonenumber").value;
@@ -84,13 +84,15 @@
                 alert("חייב להכניס ערכים");
             } else {
                 var phonenumber = phoneNmbernName == "ירדן" ? "+972504955445" : "+972528109063";
-                var total = TOTAL - sumBuy;
+                var total = Number.parseFloat((TOTAL - sumBuy)).toFixed(2);
                 var message = phonenumber + "?text=" +
                     "*חנות:* " + shop + "%0a" +
                     "*סכום:* " + sumBuy + "%0a" +
+                    `${TOTAL} - ${sumBuy} = ${total}` + "%0a" +
                     "*סך הכל:* " + total;
                 var messageForP = "חנות:" + shop + "<br>" +
                     "סכום:  " + sumBuy + "<br>" +
+                    `${TOTAL} - ${sumBuy} = ${total}` + "<br>" +
                     "סך הכל:  " + total
                 var url = "https://wa.me/" + message;
                 document.getElementById("total").innerHTML = messageForP;
@@ -105,7 +107,7 @@
             ref.on("value", function(snapshot) {
                 var data = snapshot.val();
                 document.getElementById("schum").innerHTML += data["sum"];
-                TOTAL = data["sum"];
+                TOTAL = parseFloat(data["sum"]);
             });
         }
 
