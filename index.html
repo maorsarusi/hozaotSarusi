@@ -3,6 +3,13 @@
 <head>
 </head>
 <style>
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Optional: Centers vertically */
+}
+
     * {
         font-family: Arial, sans-serif;
     }
@@ -46,6 +53,8 @@
 </style>
 
 <body onload="getTheOver()">
+
+   <div class="container">
     <form>
         <h1>מחשב הוצאות משפחת סרוסי</h1>
         <h2 id="schum"> הסכום שנשאר: </h2>
@@ -70,6 +79,7 @@
         <button type="button" onclick="sendwhatsapp();">שלח הודעה דרך whatsapp</button>
         <button type="button" onclick="startNewMonth();">התחל חודש מחדש</button>
     </form>
+</div>
     <script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>
     <script>
         var FIREBASE = 'https://hozaot-4c2b5-default-rtdb.firebaseio.com/';
