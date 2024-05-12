@@ -3,13 +3,14 @@
 <head>
 </head>
 <style>
-.container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; /* Optional: Centers vertically */
-}
-
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        /* Optional: Centers vertically */
+    }
+    
     * {
         font-family: Arial, sans-serif;
     }
@@ -54,12 +55,12 @@
 
 <body onload="getTheOver()">
 
-   <div class="container">
-    <form>
-        <h1>מחשב הוצאות משפחת סרוסי</h1>
-        <h2 id="schum"> הסכום שנשאר: </h2>
-        <label for="">מספר טלפון</label>
-        <select class="phonenumber">
+    <div class="container">
+        <form>
+            <h1>מחשב הוצאות משפחת סרוסי</h1>
+            <h2 id="schum"> הסכום שנשאר: </h2>
+            <label for="">מספר טלפון</label>
+            <select class="phonenumber">
          <option>
             מאור
          </option> 
@@ -68,18 +69,18 @@
          </option>             
         </select>
 
-        <label for="">חנות שנקנה בה</label>
-        <input type="text" class="shop">
+            <label for="">חנות שנקנה בה</label>
+            <input type="text" class="shop">
 
-        <label for="">סכום הוצאה</label>
-        <input type="number" step="0.01" class=" sum ">
+            <label for="">סכום הוצאה</label>
+            <input type="number" step="0.01" class=" sum ">
 
-        <label for=" ">סה"כ</label>
-        <p id="total" class="total"></p>
-        <button type="button" onclick="sendwhatsapp();">שלח הודעה דרך whatsapp</button>
-        <button type="button" onclick="startNewMonth();">התחל חודש מחדש</button>
-    </form>
-</div>
+            <label for=" ">סה"כ</label>
+            <p id="total" class="total"></p>
+            <button type="button" onclick="sendwhatsapp();">שלח הודעה דרך whatsapp</button>
+            <button type="button" onclick="startNewMonth();">התחל חודש מחדש</button>
+        </form>
+    </div>
     <script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>
     <script>
         var FIREBASE = 'https://hozaot-4c2b5-default-rtdb.firebaseio.com/';
@@ -89,14 +90,18 @@
         function sendwhatsapp() {
             var phoneNmbernName = document.querySelector(".phonenumber").value;
             var shop = document.querySelector(".shop").value;
+
             var sumBuy = document.querySelector(".sum").value;
             if (shop == "" || sumBuy == "") {
                 alert("חייב להכניס ערכים");
             } else {
                 var phonenumber = phoneNmbernName == "ירדן" ? "+972504955445" : "+972528109063";
                 var total = Number.parseFloat((TOTAL - sumBuy)).toFixed(2);
+                console.log(shop.includes('+'))
+                var shopMessage = shop.includes('+') ? shop.replace("+", "%2B") : shop;
+                console.log(shopMessage)
                 var message = phonenumber + "?text=" +
-                    "*חנות:* " + shop + "%0a" +
+                    "*חנות:* " + shopMessage + "%0a" +
                     "*סכום:* " + sumBuy + "%0a" +
                     `${TOTAL} - ${sumBuy} = ${total}` + "%0a" +
                     "*סך הכל:* " + total;
@@ -105,6 +110,7 @@
                     `  ${total} =  ${sumBuy} - ${TOTAL} ` + "<br>" +
                     "סך הכל:  " + total
                 var url = "https://wa.me/" + message;
+                console.log(message)
                 document.getElementById("total").innerHTML = messageForP;
                 writeToFirebase(total);
                 document.getElementById("schum").innerHTML = "הסכום שנשאר: " + total;
