@@ -59,9 +59,9 @@
         <form>
             <h1>מחשב הוצאות משפחת סרוסי</h1>
             <h2 id="schum" rtl> הסכום שנשאר: </h2>
-            <input type="phonenumber" placeholder="הכנס מספר טלפון">
+            <input id="phonenumber" type="phonenumber" placeholder="הכנס מספר טלפון">
 
-            <input type="text" class="shop" aria-placeholder="חנות שנקנה בה">
+            <input type="text" class="shop" placeholder="חנות שנקנה בה">
 
             <input type="number" step="0.01" class=" sum " placeholder="סכום הוצאה">
 
@@ -78,7 +78,7 @@
         var NEWMONTH = 2000.00;
         var startPhone = "+972"
         function sendwhatsapp() {
-            var phonenumberVal = document.querySelector(".phonenumber").value;
+            var phonenumberVal = document.getElementById("phonenumber").value;
             var shop = document.querySelector(".shop").value;
 
             var sumBuy = document.querySelector(".sum").value;
